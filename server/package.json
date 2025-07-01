@@ -1,0 +1,28 @@
+{
+  "name": "message-server",
+  "version": "1.0.0",
+  "description": "send messages using fcm",
+  "license": "ISC",
+  "author": "Rohan Batra",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "clear \n node server.js"
+  },
+  "dependencies": {
+    "@google-cloud/text-to-speech": "^6.1.0",
+    "child-process": "^1.0.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "firebase": "^11.9.1",
+    "firebase-admin": "^13.4.0",
+    "fs": "^0.0.1-security",
+    "google-translate-api-next": "^0.1.0",
+    "google-tts-api": "^2.0.2",
+    "gtts": "^0.2.1",
+    "node-fetch": "^3.3.2",
+    "util": "^0.12.5",
+    "uuid": "^11.1.0"
+  }
+}
