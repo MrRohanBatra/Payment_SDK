@@ -223,6 +223,7 @@ admin.initializeApp({
 });
 
 app.post("/send", async (req, res) => {
+  await fs.mkdir('audio', { recursive: true });
   const data = await JSON.parse(JSON.stringify(req.body));
   data.send_lang = getfiltered_language(data.send_lang);
   if(data.date){

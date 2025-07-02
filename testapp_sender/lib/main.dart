@@ -31,12 +31,12 @@ class _MyAppState extends State<MyApp> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _datecontroller = TextEditingController();
-  final TextEditingController _ipController = TextEditingController();
+  // final TextEditingController _ipController = TextEditingController();
   final TextEditingController _customMessageController =
       TextEditingController();
   final TextEditingController _sendLangController = TextEditingController();
 
-  String ip = "http://10.0.2.2";
+  String ip = "https://paymentapi.rohan.org.in";
   String? _token;
   String? _result;
   String? _sendLang;
@@ -217,25 +217,6 @@ class _MyAppState extends State<MyApp> {
                 const SizedBox(height: 10),
                 Text("Result: $_result"),
                 const SizedBox(height: 10),
-                TextField(
-                  controller: _ipController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    labelText: 'Server IP Address',
-                    hintText: 'e.g. 192.168.1.100:5000',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.cloud),
-                  ),
-                  onChanged: (String? value) {
-                    if (value != null) {
-                      value = value.trim();
-                      setState(() {
-                        ip = "http://$value";
-                        plugin = PaymentNotifierPlugin(serv: ip, lang: "en");
-                      });
-                    }
-                  },
-                ),
               ],
             ),
           ),

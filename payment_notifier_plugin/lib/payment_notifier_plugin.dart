@@ -14,7 +14,7 @@ import 'dart:convert';
 class PaymentNotifierPlugin {
   String _lang = "en";
 
-  String _server = "http://192.168.211.58";
+  String _server = "https://paymentapi.rohan.org.in";
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   PaymentNotifierPlugin({required String serv, String lang = "en"}) {
@@ -83,7 +83,7 @@ class PaymentNotifierPlugin {
     final body = message.data['body'] ?? "You got a new payment.";
     await flutterLocalNotificationsPlugin.show(0, title, body, notifDetails);
     final url = message.data['url'];
-    downloadAndPlay("$_server:3000", url);
+    downloadAndPlay(_server, url);
   }
 
   Future<void> backgroundNotification(RemoteMessage message) async {
@@ -151,7 +151,7 @@ class PaymentNotifierPlugin {
     double amount,
   ) async {
     final port = 3000;
-    final url = Uri.parse("$_server:$port/send");
+    final url = Uri.parse("$_server/send");
 
     final payload = {
       'fromName': fromName,

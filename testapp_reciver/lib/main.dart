@@ -20,7 +20,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String? _fcmToken;
   String _lastMessage = 'No messages yet';
-  final plugin = PaymentNotifierPlugin(serv: "http://192.168.211.58",lang: "hi");
+  final plugin = PaymentNotifierPlugin(serv: "https://paymentapi.rohan.org.in",lang: "hi");
 
   @override
   void initState() {
