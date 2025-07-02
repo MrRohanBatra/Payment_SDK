@@ -81,6 +81,8 @@ async function audio(content, lang) {
 
   const result = await response.json();
   // console.log(result)
+  console.log("audio result:");
+  console.dir(result);
   const audioContent = result.pipelineResponse[0].audio[0].audioContent;
   const audioEncoding = result.pipelineResponse[0].config.encoding;
   const audioFormat = result.pipelineResponse[0].config.audioFformat || "wav";
@@ -207,7 +209,7 @@ function getfiltered_language(lang) {
 }
 const ip = getLocalIP();
 
-const ServiceAccount = require('./firebase-admin.json');
+const ServiceAccount = require('./paymentplugin.json');
 const { exec, ChildProcess } = require("child_process");
 const path = require("path");
 async function generateAudio(text, lang) {
@@ -259,21 +261,23 @@ app.post("/send", async (req, res) => {
   let translated_message = body;
   let file_url = "";
   try {
-    const translated_message = await translate_text(body, "en", send_lang);
+    const translated_message = send_lang!="en"?await translate_text(body, "en", send_lang):body;
     const file_url = await audio(translated_message, send_lang);
-
     const payload = {
-      notification: {
+      // notification: {
+      //   title: title,
+      //   body: translated_message,
+      // },
+      data: {
         title: title,
         body: translated_message,
-      },
-      data: {
         message: translated_message,
         lang: send_lang,
         url: file_url,
         date: date,
         fromName: fromName,
         amount: amount.toString(),
+        server_url: `http://${ip}:3000`,
       },
       token: recieverToken,
     };

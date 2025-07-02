@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
+    id("com.google.gms.google-services") // ✅ Required for Firebase
 }
 
 android {
@@ -40,4 +41,5 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    implementation("com.google.firebase:firebase-messaging:23.4.1") // ✅ Firebase Messaging
 }

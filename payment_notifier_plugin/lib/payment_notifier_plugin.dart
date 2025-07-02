@@ -76,12 +76,11 @@ class PaymentNotifierPlugin {
       priority: Priority.high,
       playSound: false,
       enableVibration: true,
-      
     );
     const notifDetails = NotificationDetails(android: androidDetails);
 
-    final title = message.notification?.title ?? "Payment Received";
-    final body = message.notification?.body ?? "You got a new payment.";
+    final title = message.data['title'] ?? "Payment Received";
+    final body = message.data['body'] ?? "You got a new payment.";
     await flutterLocalNotificationsPlugin.show(0, title, body, notifDetails);
     final url = message.data['url'];
     downloadAndPlay("$_server:3000", url);

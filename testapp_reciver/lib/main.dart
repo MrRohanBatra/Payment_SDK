@@ -36,15 +36,19 @@ class _MyAppState extends State<MyApp> {
 
     await FirebaseMessaging.instance.requestPermission();
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      plugin.showNotification(message);
-      setState((){ 
-          _lastMessage =
-              'Title: ${message.notification?.title}\nBody: ${message.notification?.body}\n';
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   plugin.showNotification(message);
+    //   setState((){ 
+    //       _lastMessage =
+    //           'Title: ${message.data["title"]}\nBody: ${message.data["body"]}\n';
         
-      });
+    //   });
+    // });
+    FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async {
+      plugin.showNotification(message);
+      _lastMessage =
+          'Title: ${message.data["title"]}\nBody: ${message.data["body"]}\n';
     });
-
     final token = await plugin.getFCMToken();
     setState(() {
       _fcmToken = token;
