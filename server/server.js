@@ -210,40 +210,6 @@ const ip = getLocalIP();
 const ServiceAccount = require('./firebase-admin.json');
 const { exec, ChildProcess } = require("child_process");
 const path = require("path");
-
-function runPythonScript(scriptName, args) {
-  return new Promise((resolve, reject) => {
-    const cmd = `python3 ${path.join(__dirname, scriptName)} ${args.map(arg => `"${arg}"`).join(" ")}`;
-    exec(cmd, (err, stdout, stderr) => {
-      if (err) return reject(stderr || err.message);
-      resolve(stdout.trim());
-    });
-  });
-}
-
-async function translate(text, lang) {
-  if (lang != "en") {
-    const response = await fetch(
-      "https://israeli-league-appreciate-vat.trycloudflare.com/translate",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: text,
-          target_lang: lang,
-        }),
-      }
-    );
-    if (response.status == 200) {
-      const data = await response.json();
-      return data.translated_text;
-    }
-  }
-  return text;
-}
-
 async function generateAudio(text, lang) {
   return runPythonScript("generate_audio.py", [text, lang]);
 }
@@ -353,16 +319,3 @@ app.listen(port, () => {
   exec("source ./venv/bin/activate && python3 translate.py");
   console.log(`Server running at http://${ip}:${port}`);
 });
-
-
-
-const sampleData = {
-  fromName: 'Rohan',
-  fromToken: 'e6ASWhzBR0a3fiTVif92PG:APA91bG_2HV84LAfvATcvIr56Tr_qn9wqbW4GX_MVGdTgUHYkoBjIJq-XqOxoXzAi0CKPJCHs8zey5jx3ZmGkMn9Eoct1LXVWbFnyLY7EQhZ5Y3pbOYGq1c',
-  message: 'hello',
-  send_lang: 'pa',
-  date: '',
-  toName: 'Receiver',
-  toToken: 'eFWQ7AVlS1eT7CEqDr22DF:APA91bGk2sIxi22zFOZ5Gn2o3-uh-5VIMRsNvgqgDLX9ZHIonyJ0vGW8xPBJOOkZETC_lhmr3bKwNqnfbIpI292uo9TdqDxS1vVy9oa0ilFgqgOV92N_W9A',
-  amount: '100.0'
-}
