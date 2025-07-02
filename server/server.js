@@ -5,8 +5,8 @@ const fs = require('fs');
 const os = require('os');
 
 function convertDateFormat(dateStr) {
-    const [day, month, year] = dateStr.split("-");
-    return `${month}-${day}-${year}`;
+  const [day, month, year] = dateStr.split("-");
+  return `${month}-${day}-${year}`;
 }
 
 async function audio(content, lang) {
@@ -78,22 +78,29 @@ async function audio(content, lang) {
     })
 
   });
-
   const result = await response.json();
-  // console.log(result)
   console.log("audio result:");
   console.dir(result);
+
+  // Extract audio data
   const audioContent = result.pipelineResponse[0].audio[0].audioContent;
   const audioEncoding = result.pipelineResponse[0].config.encoding;
-  const audioFormat = result.pipelineResponse[0].config.audioFformat || "wav";
+  const audioFormat = result.pipelineResponse[0].config.audioFormat || "wav"; // fixed typo: audioFformat → audioFormat
+
+  // Convert base64 to buffer
   const audiobuffer = Buffer.from(audioContent, audioEncoding);
+
+  // Generate and save file to absolute path
   const fs = require('fs');
+  const path = require('path');
   const { v4: uuidv4 } = require('uuid');
-  const filePath = `audio/audio_${uuidv4()}.${audioFormat}`;
-  fs.writeFileSync(filePath, audiobuffer);
-  return `/${filePath}`;
-  // console.log("✅ Request completed successfully");
-  // console.log()
+  const filename = `audio_${uuidv4()}.${audioFormat}`;
+  const absolutePath = path.join(__dirname, 'audio', filename);
+  fs.writeFileSync(absolutePath, audiobuffer);
+  console.log("✅ Saved audio to:", absolutePath);
+
+  // Return the public URL path
+  return `/audio/${filename}`;
 }
 
 async function translate_text(content, source_language, target_language) {
@@ -209,13 +216,9 @@ function getfiltered_language(lang) {
 }
 const ip = getLocalIP();
 
-const ServiceAccount = require('./paymentplugin.json');
+const ServiceAccount = require('./firebase-admin.json');
 const { exec, ChildProcess } = require("child_process");
 const path = require("path");
-async function generateAudio(text, lang) {
-  return runPythonScript("generate_audio.py", [text, lang]);
-}
-
 app.use(express.json());
 
 admin.initializeApp({
@@ -223,10 +226,10 @@ admin.initializeApp({
 });
 
 app.post("/send", async (req, res) => {
-  await fs.mkdir('audio', { recursive: true });
+  // await fs.mkdir('audio', { recursive: true });
   const data = await JSON.parse(JSON.stringify(req.body));
   data.send_lang = getfiltered_language(data.send_lang);
-  if(data.date){
+  if (data.date) {
     data.date = convertDateFormat(String(data.date));
   }
   data.amount = cleanAmount(data.amount);
@@ -262,7 +265,7 @@ app.post("/send", async (req, res) => {
   let translated_message = body;
   let file_url = "";
   try {
-    const translated_message = send_lang!="en"?await translate_text(body, "en", send_lang):body;
+    const translated_message = send_lang != "en" ? await translate_text(body, "en", send_lang) : body;
     const file_url = await audio(translated_message, send_lang);
     const payload = {
       // notification: {
@@ -292,19 +295,20 @@ app.post("/send", async (req, res) => {
   }
 });
 function cleanAmount(amount) {
-    return amount % 1 === 0 ? parseInt(amount) : parseFloat(amount);
+  return amount % 1 === 0 ? parseInt(amount) : parseFloat(amount);
 }
 app.get("/", async (req, res) => {
-  console.log(req);
+  // console.log(req);
   res.sendFile(path.join(__dirname, "index.html"));
 });
 app.use((req, res, next) => {
   res.sendStatus(404);
 });
 app.get('/audio/:filename', (req, res) => {
+  console.log(`Received request for audio file: /${req.params.filename}`);
   const fileName = req.params.filename;
   const filePath = path.join(__dirname, 'audio', fileName);
-
+  console.log(`Request for audio file: /${fileName}`);
   fs.access(filePath, fs.constants.F_OK, (err) => {
     if (err) {
       console.log(`'Audio file not found': /${fileName}`);
@@ -312,17 +316,22 @@ app.get('/audio/:filename', (req, res) => {
     }
 
 
-    res.setHeader('Content-Type', 'audio/mpeg');
+    const ext = path.extname(fileName).toLowerCase();
+    const contentType = ext === '.wav' ? 'audio/wav' : 'audio/mpeg';
+    res.setHeader('Content-Type', contentType);
 
-
-    console.log(`Sending file : /${fileName}`);
+    console.log(`Sent file : /${fileName}`);
     const readStream = fs.createReadStream(filePath);
     readStream.pipe(res);
   })
 });
-
-const port = 3000;
+const port = 1607;
+// app.listen(port, () => {
+//   // exec("source ./venv/bin/activate && python3 translate.py");
+//   console.log(`Server running at http://${ip}:${port}`);
+// });
 app.listen(port, () => {
-  exec("source ./venv/bin/activate && python3 translate.py");
-  console.log(`Server running at http://${ip}:${port}`);
+  const serverPath = path.resolve(__dirname); // absolute path to current folder
+  console.log(`✅ Server running at http://${ip}:${port}`);
+  console.log(`📁 Server script located at: ${serverPath}`);
 });

@@ -14,7 +14,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         Log.d("FCM", "🚀 onMessageReceived triggered")
 
-        val baseUrl = remoteMessage.data["server_url"]
+        val baseUrl = "https://paymentapi.rohan.org.in"
         val audioPath = remoteMessage.data["url"]
 
         Log.d("FCM", "server_url: $baseUrl")

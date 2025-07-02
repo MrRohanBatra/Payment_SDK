@@ -62,7 +62,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val title = remoteMessage.data["title"] ?: "Payment Received"
         val body = remoteMessage.data["body"] ?: "You got a new payment."
         showCustomNotification(this,title,body) 
-        val baseUrl = remoteMessage.data["server_url"]
+        val baseUrl = "https://paymentapi.rohan.org.in"
         val audioPath = remoteMessage.data["url"]
 
         Log.d("FCM", "server_url: $baseUrl")
