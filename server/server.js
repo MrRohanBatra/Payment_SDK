@@ -297,7 +297,9 @@ app.get("/", async (req, res) => {
   console.log(req);
   res.sendFile(path.join(__dirname, "index.html"));
 });
-
+app.use((req, res, next) => {
+  res.sendStatus(404);
+});
 app.get('/audio/:filename', (req, res) => {
   const fileName = req.params.filename;
   const filePath = path.join(__dirname, 'audio', fileName);
