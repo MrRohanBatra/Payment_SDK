@@ -1,5 +1,0 @@
-
-
-export {
-    translate_text
-}
