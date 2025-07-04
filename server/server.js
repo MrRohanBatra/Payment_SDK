@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.use("/", require("./routes/notification"));
 app.use("/", require("./routes/audioRoutes"));
-
+app.use("/",require("./routes/homeRoutes.js"));
 
 app.get("/", async (req, res) => {
   res.sendFile(path.join(__dirname, "/html/index.html"));
