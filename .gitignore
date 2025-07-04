@@ -1,0 +1,7 @@
+/server/node_modules
+/server/venv
+/server/firebase-admin.json
+# server/firebase-admin.json
+# .gitignore
+/server/.env
+/server/audio/*

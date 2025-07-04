@@ -64,6 +64,9 @@ class _MyAppState extends State<MyApp> {
 
   String? _sendvalue;
   Future<void> testSendMessage() async {
+    setState(() {
+      _result = "Sending....";
+    });
     final result = await plugin.sendMessage(
       _nameController.text.trim(), // fromName
       _token ?? "fromToken", // fromFCM
