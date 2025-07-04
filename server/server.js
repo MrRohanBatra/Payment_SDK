@@ -4,7 +4,6 @@ const router = express.Router();
 const admin = require("./firebase/admin");
 const { getLocalIP } = require("./utils/network");
 require("dotenv").config();
-// admin.initializeApp();
 
 const app = express();
 app.use(express.json());
