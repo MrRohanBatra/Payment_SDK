@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:convert';
+import 'package:permission_handler/permission_handler.dart';
 
 class PaymentNotifierPlugin {
   String _lang = "en";
@@ -90,11 +91,27 @@ class PaymentNotifierPlugin {
     showNotification(message);
   }
 
-  void initNotifications() async {
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const initSettings = InitializationSettings(android: androidInit);
-    await flutterLocalNotificationsPlugin.initialize(initSettings);
+  // void initNotifications() async {
+  //   const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+  //   const initSettings = InitializationSettings(android: androidInit);
+  //   await flutterLocalNotificationsPlugin.initialize(initSettings);
+  // }
+
+Future<void> initNotifications() async {
+  const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+  const initSettings = InitializationSettings(android: androidInit);
+
+  await flutterLocalNotificationsPlugin.initialize(initSettings);
+
+  if (Platform.isAndroid) {
+    // 🔒 Request permission (required on Android 13+)
+    var status = await Permission.notification.status;
+    if (!status.isGranted) {
+      var result = await Permission.notification.request();
+      print('Notification permission granted: ${result.isGranted}');
+    }
   }
+}
 
   //   Future<String?> sendMessage(
   //     String fromName,
@@ -140,7 +157,7 @@ class PaymentNotifierPlugin {
   //     }
   //   }
   // }
-  Future<String?> sendMessage(
+  Future<http.Response> sendMessage(
     String fromName,
     String fromFCM,
     String message,
@@ -172,16 +189,16 @@ class PaymentNotifierPlugin {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(payload),
       );
-
-      if (response.statusCode == 200) {
-        return null; // success
-      } else {
-        print("Server error: ${response.body}");
-        return response.body.toString(); // failure
-      }
+      return response;
+      // if (response.statusCode == 200) {
+      //   return "Success"; // success
+      // } else {
+      //   print("Server error: ${response.body}");
+      //   return response.body.toString(); // failure
+      // }
     } catch (e) {
       print("Exception during HTTP call: $e");
-      return e.toString();
+      return http.Response('{"error": "${e.toString()}"}', 500);
     }
   }
 }

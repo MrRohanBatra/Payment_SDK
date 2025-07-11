@@ -25,3 +25,19 @@ app.listen(port, () => {
   console.log(`✅ Server running at http://${getLocalIP()}:${port}`);
   console.log(`📁 Server script located at: ${__dirname}`);
 });
+
+const languageMap = {
+  "Hindi": "hi",
+  "Kannada": "kn",
+  "Bodo": "brx",
+  "Tamil": "ta",
+  "Assamese": "as",
+  "Bengali": "bn",
+  "Marathi": "mr",
+  "Punjabi": "pa",
+  "Malayalam": "ml",
+  "Manipuri": "mni",
+  "Telugu": "te",
+  "Gujarati": "gu",
+  "Odia": "or"
+};

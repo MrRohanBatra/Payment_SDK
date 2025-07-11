@@ -39,7 +39,7 @@ async function translate_text(content, source_language, target_language) {
   );
 
   const data = await resp.json();
-  // console.log("Response from ULCA:", data);
+  console.log("Response from ULCA:", data);
   const service_id = data.pipelineResponseConfig[0].config[0].serviceId;
   const compute_url = [data.pipelineInferenceAPIEndPoint.callbackUrl];
 
@@ -83,7 +83,7 @@ async function translate_text(content, source_language, target_language) {
   // console.log("Response from compute:", compute_resp.status);
   if (compute_resp.status === 200) {
     const compute_data = await compute_resp.json();
-    // console.log("Compute data:", compute_data);
+    console.dir(compute_data);
     return compute_data.pipelineResponse[0].output[0].target;
   }
 }
